@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Movimientos - SIN LIMITE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    .main-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+      color: var(--white);
+      padding: 20px 0;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 20px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .user-details {
+      flex: 1;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-role {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 0 15px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .menu-item.active {
+      background-color: rgba(255, 255, 255, 0.15);
+      font-weight: 600;
+    }
+
+    .menu-icon {
+      width: 20px;
+      text-align: center;
+    }
+
+    .menu-text {
+      font-size: 15px;
+    }
+
+    /* Main Content Styles */
+    .content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background-color: var(--white);
+      padding: 20px 30px;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .notification-icon {
+      position: relative;
+      font-size: 20px;
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: var(--danger);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-content {
+      padding: 30px;
+      flex: 1;
+    }
+
+    /* Stats Cards */
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-title {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+    }
+
+    .icon-movements {
+      background-color: var(--primary);
+    }
+
+    .icon-assignments {
+      background-color: var(--success);
+    }
+
+    .icon-materials {
+      background-color: var(--warning);
+    }
+
+    .icon-providers {
+      background-color: #17a2b8;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .stat-change {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .positive {
+      color: var(--success);
+    }
+
+    .negative {
+      color: var(--danger);
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .new-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .new-button:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      background: var(--bg-light);
+      border-radius: 6px;
+      padding: 8px 15px;
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .search-icon {
+      color: var(--text-light);
+      margin-right: 10px;
+    }
+
+    .search-input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .filter-select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background-color: white;
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Table Styles */
+    .table-container {
+      background: var(--white);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .table-header {
+      display: grid;
+      grid-template-columns: 60px 1fr 100px 100px 100px 140px 1fr 120px;
+      gap: 15px;
+      padding: 15px 20px;
+      background-color: var(--primary);
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .table-body {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 100px 100px 100px 140px 1fr 120px;
+      gap: 15px;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .table-row:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    .material-image {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      object-fit: cover;
+      background-color: var(--bg-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 12px;
+    }
+
+    .type-badge {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .type-unit {
+      background-color: #e8f5e9;
+      color: var(--success);
+    }
+
+    .type-mtr {
+      background-color: #e3f2fd;
+      color: #2196f3;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      transition: var(--transition);
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .edit-btn {
+      color: var(--primary);
+    }
+
+    .edit-btn:hover {
+      background-color: rgba(58, 143, 149, 0.1);
+    }
+
+    .delete-btn {
+      color: var(--danger);
+    }
+
+    .delete-btn:hover {
+      background-color: rgba(220, 53, 69, 0.1);
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .pagination-info {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .pagination-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pagination-btn {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background-color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pagination-btn:hover {
+      background-color: var(--bg-light);
+    }
+
+    .pagination-btn.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      padding: 20px;
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(58, 143, 149, 0.2);
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+    }
+
+    .btn-secondary:hover {
+      background-color: #e9ecef;
+    }
+
+    .btn-success {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #218838;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 1200px) {
+      .table-header, .table-row {
+        grid-template-columns: 50px 1fr 80px 80px 80px 120px 1fr 100px;
+        gap: 10px;
+        padding: 12px 15px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 70px;
+      }
+
+      .menu-text, .user-details, .logo {
+        display: none;
+      }
+
+      .sidebar-header {
+        padding: 0 10px 20px;
+      }
+
+      .user-info {
+        justify-content: center;
+      }
+
+      .sidebar-menu {
+        padding: 0 10px;
+      }
+
+      .menu-item {
+        justify-content: center;
+        padding: 12px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        height: 100vh;
+        width: 280px;
+        z-index: 1000;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .content-area {
+        width: 100%;
+      }
+
+      .header {
+        padding: 15px 20px;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .stats-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-container {
+        max-width: none;
+      }
+
+      .table-container {
+        overflow-x: auto;
+      }
+
+      .table-header, .table-row {
+        grid-template-columns: 50px 200px 100px 100px 100px 150px 200px 100px;
+        min-width: 1000px;
+      }
+
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-title {
+        font-size: 20px;
+      }
+
+      .pagination {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+      }
+
+      .pagination-controls {
+        justify-content: center;
+      }
+    }
+
+    .hamburger {
+      display: none;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 18px;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1001;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+<button class="hamburger" onclick="toggleSidebar()">
+  <i class="fas fa-bars"></i>
+</button>
+<div class="overlay" onclick="closeSidebar()"></div>
+
+<div class="main-container">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">SIN LIMITE</div>
+      <div class="user-info">
+        <img src="https://ui-avatars.com/api/?name=Nombre+Apellido&background=3a8f95&color=fff&size=50" alt="Avatar del usuario" class="user-avatar">
+        <div class="user-details">
+          <div class="user-name">Nombre Apellido</div>
+          <div class="user-role">Super Administrador</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <a href="#" class="menu-item">
+        <div class="menu-icon"><i class="fas fa-tachometer-alt"></i></div>
+        <div class="menu-text">Dashboard</div>
+      </a>
+      <a href="#" class="menu-item">
+        <div class="menu-icon"><i class="fas fa-users"></i></div>
+        <div class="menu-text">Usuarios</div>
+      </a>
+      <a href="#" class="menu-item">
+        <div class="menu-icon"><i class="fas fa-tools"></i></div>
+        <div class="menu-text">Técnicos</div>
+      </a>
+      <a href="#" class="menu-item active">
+        <div class="menu-icon"><i class="fas fa-exchange-alt"></i></div>
+        <div class="menu-text">Movimientos</div>
+      </a>
+      <a href="#" class="menu-item">
+        <div class="menu-icon"><i class="fas fa-network-wired"></i></div>
+        <div class="menu-text">Onus</div>
+      </a>
+      <a href="#" class="menu-item">
+        <div class="menu-icon"><i class="fas fa-chart-bar"></i></div>
+        <div class="menu-text">Reportes</div>
+      </a>
+      <a href="#" class="menu-item">
+        <div class="menu-icon"><i class="fas fa-sign-out-alt"></i></div>
+        <div class="menu-text">Salir</div>
+      </a>
+    </nav>
+  </aside>
+
+  <main class="content-area">
+    <header class="header">
+      <h1 class="header-title">Sistema de Movimientos</h1>
+      <div class="header-actions">
+        <div class="user-controls">
+          <div class="notification-icon">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">3</span>
+          </div>
+          <div class="user-avatar">
+            <img src="https://ui-avatars.com/api/?name=Nombre+Apellido&background=3a8f95&color=fff&size=36" alt="Usuario">
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Total Movimientos</div>
+            <div class="stat-icon icon-movements">
+              <i class="fas fa-exchange-alt"></i>
+            </div>
+          </div>
+          <div class="stat-value">142</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i>
+            <span>+12 este mes</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Asignaciones</div>
+            <div class="stat-icon icon-assignments">
+              <i class="fas fa-tasks"></i>
+            </div>
+          </div>
+          <div class="stat-value">68</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i>
+            <span>+5 este mes</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Materiales</div>
+            <div class="stat-icon icon-materials">
+              <i class="fas fa-boxes"></i>
+            </div>
+          </div>
+          <div class="stat-value">24</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i>
+            <span>+3 este mes</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Proveedores</div>
+            <div class="stat-icon icon-providers">
+              <i class="fas fa-truck"></i>
+            </div>
+          </div>
+          <div class="stat-value">15</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i>
+            <span>+2 este mes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls-bar">
+        <button class="new-button" onclick="openMovementModal()">
+          <i class="fas fa-plus"></i>
+          <span>Añadir Movimiento</span>
+        </button>
+
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Buscar movimientos..." id="searchInput">
+        </div>
+
+        <div class="filters">
+          <select class="filter-select" id="typeFilter">
+            <option value="">Todos los tipos</option>
+            <option value="asignacion">Asignación</option>
+            <option value="entrada">Entrada</option>
+            <option value="salida">Salida</option>
+          </select>
+
+          <select class="filter-select" id="materialFilter">
+            <option value="">Todos los materiales</option>
+            <option value="aislador">Aislador</option>
+            <option value="tensor">Tensor</option>
+            <option value="cinta">Cinta</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <div>N°</div>
+          <div>ARTÍCULO</div>
+          <div>TIPO</div>
+          <div>CANTIDAD</div>
+          <div>IMAGEN</div>
+          <div>CATEGORÍA</div>
+          <div>DESCRIPCIÓN</div>
+          <div>ACCIONES</div>
+        </div>
+
+        <div class="table-body" id="movementsTableBody">
+          <!-- Los movimientos se cargarán aquí mediante JavaScript -->
+        </div>
+
+        <div class="pagination">
+          <div class="pagination-info">Mostrando Página 1 de 2</div>
+          <div class="pagination-controls">
+            <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal para añadir/editar movimiento -->
+<div class="modal" id="movementModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modalTitle">Añadir Movimiento</h3>
+      <button class="modal-close" onclick="closeMovementModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="movementForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="movementType">Tipo de Movimiento</label>
+            <select class="form-select" id="movementType" required>
+              <option value="">Seleccionar tipo</option>
+              <option value="asignacion">Asignación</option>
+              <option value="entrada">Entrada</option>
+              <option value="salida">Salida</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="movementQuantity">Cantidad</label>
+            <input type="number" class="form-input" id="movementQuantity" min="1" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="movementMaterial">Material</label>
+          <select class="form-select" id="movementMaterial" required>
+            <option value="">Seleccionar material</option>
+            <option value="aislador-pasante">Aislador Pasante</option>
+            <option value="anilla-guia">Anilla Guía</option>
+            <option value="tensor-plano">Tensor Plano</option>
+            <option value="aislador-simple">Aislador Simple</option>
+            <option value="cinta-acero">Cinta de Acero</option>
+            <option value="tensor-8">Tensor 8</option>
+            <option value="cruceta">Cruceta Metálica 600x600</option>
+            <option value="drop">Drop</option>
+            <option value="caja-nap">Caja Nap</option>
+            <option value="conector">Conector SC - APC</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="movementProvider">Proveedor</label>
+          <input type="text" class="form-input" id="movementProvider" placeholder="Nombre del proveedor">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="movementObservations">Observaciones</label>
+          <textarea class="form-textarea" id="movementObservations" placeholder="Observaciones adicionales"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeMovementModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Añadir Movimiento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Datos de ejemplo para los movimientos
+  const movements = [
+    { id: 1, article: "Aislador Pasante", type: "UNIT", quantity: 52, category: "Equipos", description: "Aislador con Pasante", image: "A" },
+    { id: 2, article: "Anilla Guia", type: "UNIT", quantity: 23, category: "Ferreteria", description: "Anilla Guia de Acero para cable", image: "A" },
+    { id: 3, article: "Tensor Plano", type: "UNIT", quantity: 52, category: "Equipos", description: "Tensor Metálico Plano Drop", image: "T" },
+    { id: 4, article: "Aislador Simple", type: "UNIT", quantity: 68, category: "Equipos", description: "Aislador Simple", image: "A" },
+    { id: 5, article: "Cinta de Acero", type: "MTR", quantity: 254, category: "Equipos", description: "Cinta band de Acero", image: "C" },
+    { id: 6, article: "Tensor 8", type: "UNIT", quantity: 28, category: "Equipos", description: "Tensor tipo 8 color blanco", image: "T" },
+    { id: 7, article: "Cruceta Metálica 600x600", type: "UNIT", quantity: 52, category: "Equipos", description: "Cruceta Metálica", image: "C" },
+    { id: 8, article: "Drop", type: "MTR", quantity: 254, category: "Equipos", description: "Drop 1H", image: "D" },
+    { id: 9, article: "Caja Nap", type: "UNIT", quantity: 11, category: "Equipos", description: "NAP 1X16", image: "C" },
+    { id: 10, article: "Conector SC - APC", type: "UNIT", quantity: 85, category: "Equipos", description: "Conector de Campo SC - APC", image: "C" }
+  ];
+
+  // Elementos DOM
+  const movementsTableBody = document.getElementById('movementsTableBody');
+  const searchInput = document.getElementById('searchInput');
+  const typeFilter = document.getElementById('typeFilter');
+  const materialFilter = document.getElementById('materialFilter');
+  const movementModal = document.getElementById('movementModal');
+  const movementForm = document.getElementById('movementForm');
+  const modalTitle = document.getElementById('modalTitle');
+
+  // Renderizar la tabla de movimientos
+  function renderMovementsTable(movementsToRender) {
+    movementsTableBody.innerHTML = '';
+
+    movementsToRender.forEach(movement => {
+      const row = document.createElement('div');
+      row.className = 'table-row';
+
+      row.innerHTML = `
+                    <div>${movement.id}</div>
+                    <div>${movement.article}</div>
+                    <div><span class="type-badge ${movement.type === 'UNIT' ? 'type-unit' : 'type-mtr'}">${movement.type}</span></div>
+                    <div>${movement.quantity}</div>
+                    <div>
+                        <div class="material-image">
+                            ${movement.image}
+                        </div>
+                    </div>
+                    <div>${movement.category}</div>
+                    <div>${movement.description}</div>
+                    <div class="action-buttons">
+                        <button class="action-btn edit-btn" onclick="editMovement(${movement.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteMovement(${movement.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+      movementsTableBody.appendChild(row);
+    });
+  }
+
+  // Filtrar movimientos
+  function filterMovements() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const typeValue = typeFilter.value;
+    const materialValue = materialFilter.value;
+
+    const filteredMovements = movements.filter(movement => {
+      const matchesSearch = movement.article.toLowerCase().includes(searchTerm) ||
+        movement.description.toLowerCase().includes(searchTerm);
+      const matchesType = !typeValue || movement.type.toLowerCase() === typeValue;
+      const matchesMaterial = !materialValue ||
+        (materialValue === 'aislador' && movement.article.toLowerCase().includes('aislador')) ||
+        (materialValue === 'tensor' && movement.article.toLowerCase().includes('tensor')) ||
+        (materialValue === 'cinta' && movement.article.toLowerCase().includes('cinta'));
+
+      return matchesSearch && matchesType && matchesMaterial;
+    });
+
+    renderMovementsTable(filteredMovements);
+  }
+
+  // Abrir modal para añadir movimiento
+  function openMovementModal() {
+    modalTitle.textContent = 'Añadir Movimiento';
+    movementForm.reset();
+    movementModal.classList.add('active');
+  }
+
+  // Cerrar modal
+  function closeMovementModal() {
+    movementModal.classList.remove('active');
+  }
+
+  // Editar movimiento
+  function editMovement(movementId) {
+    const movement = movements.find(m => m.id === movementId);
+    if (movement) {
+      modalTitle.textContent = 'Editar Movimiento';
+      // Aquí cargaríamos los datos del movimiento en el formulario
+      // Por simplicidad, solo mostramos un mensaje
+      alert(`Editando movimiento: ${movement.article}`);
+      openMovementModal();
+    }
+  }
+
+  // Eliminar movimiento
+  function deleteMovement(movementId) {
+    if (confirm('¿Está seguro de que desea eliminar este movimiento?')) {
+      alert(`Movimiento ${movementId} eliminado (en una aplicación real, esto eliminaría el movimiento de la base de datos)`);
+      // En una aplicación real, haríamos una llamada a la API para eliminar el movimiento
+    }
+  }
+
+  // Manejar envío del formulario
+  movementForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Movimiento añadido correctamente');
+    closeMovementModal();
+  });
+
+  // Funcionalidad del sidebar
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.querySelector('.overlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+  }
+
+  function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.querySelector('.overlay');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+  }
+
+  // Event listeners para filtros
+  searchInput.addEventListener('input', filterMovements);
+  typeFilter.addEventListener('change', filterMovements);
+  materialFilter.addEventListener('change', filterMovements);
+
+  // Inicializar la página
+  document.addEventListener('DOMContentLoaded', function() {
+    renderMovementsTable(movements);
+
+    // Cerrar sidebar al hacer clic fuera en móviles
+    document.addEventListener('click', function(e) {
+      const sidebar = document.getElementById('sidebar');
+      const hamburger = document.querySelector('.hamburger');
+
+      if (window.innerWidth < 768 &&
+        !sidebar.contains(e.target) &&
+        !hamburger.contains(e.target) &&
+        sidebar.classList.contains('open')) {
+        closeSidebar();
+      }
+    });
+  });
+</script>
+</body>
+</html>
